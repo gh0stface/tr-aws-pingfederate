@@ -10,7 +10,7 @@ The dockerfile references some files from PingFederate which are not included in
 
 This repository makes reference to something called the Asset Insight ID (AAID). This number is like a configuration item, or asset identifier. When used in this repository, it ensures that each environment (dev, qa, prod) are easy to keep separate. It is also critical for most of the naming conventions in the CloudFormation script, so it is recommended you define your environment's AAID's before you begin.
 
-As maintained in this repository, you will need the following files in the following paths (files can be updated with newer versions):
+You will need the following files in the following paths (files can be updated with newer versions). **You may need to build the missing folder structure under /docker-build-files/ for any files you wish to modify for your deployment.** You will mimic the folder structure of a PingFederate deployment. Extract pingfederate.zip for an example:
 
 /tr-aws-pingfederate/PingFederate/docker-build-files
 - `pingfederate-9.2.0.zip`
