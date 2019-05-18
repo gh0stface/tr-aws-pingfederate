@@ -220,7 +220,7 @@ Conditions:
   IsProd:
     !Equals [ !Ref EnvironmentType, prod ]
   IsDev:
-    !Equals [ !Ref EnvironmentType, prod ]
+    !Equals [ !Ref EnvironmentType, dev ]
   IsUSEast1:
     !Equals [ !Ref "AWS::Region", us-east-1 ]
   IsEUWest1:
