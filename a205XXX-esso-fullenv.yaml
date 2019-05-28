@@ -49,6 +49,9 @@ Mappings:
       BastionSSHSecurityGroup: sg-bd34ca48
       KeyPrincipal1: arn:aws:iam::400400400400:role/a205529-esso-cfrole-prod
       LBCertID: 46177819-1ac4-4355-bf38-580706b9a365
+      NatGatewayA: 34.233.233.156/32
+      NatGatewayB: 54.233.233.251/32
+      NatGatewayC: 34.233.233.143/32
     eu-west-1:
       MinClusterSize: 3
       MaxClusterSize: 8
@@ -104,6 +107,9 @@ Mappings:
       KeyPrincipal1: arn:aws:iam::88888888888:role/a205485-esso-cfrole-use1-qa
       # LBCert: arn:aws:acm:us-east-1:88888888888:certificate/1b9d62f5-4801-434a-8901-706a8124445c
       LBCertID: 1b9d62f5-4801-434a-8901-706a8124445c
+      NatGatewayA: 34.233.233.156/32
+      NatGatewayB: 54.233.233.251/32
+      NatGatewayC: 34.233.233.143/32
     eu-west-1:
       MinClusterSize: 1
       MaxClusterSize: 3
@@ -140,6 +146,9 @@ Mappings:
       KeyPrincipal1: arn:aws:iam::88888888888:role/a205466-esso-cfrole-dev
       # LBCert: arn:aws:acm:us-east-1:88888888888:certificate/9fd52d37-b6fd-4a8f-a69d-3c78ebbc4eae
       LBCertID: 9fd52d37-b6fd-4a8f-a69d-3c78ebbc4eae
+      NatGatewayA: 34.233.233.156/32
+      NatGatewayB: 54.233.233.251/32
+      NatGatewayC: 34.233.233.143/32
 
 # These are the AWS region-specific mappings. The AMI ID is our "golden image" used with the EC2 hosts that compose the ECS cluster,
 # and gets updated here with each new release from our Cloud Team. TR has a default DBSubnetGroup provided in managed VPCs. Whether 
@@ -285,6 +294,42 @@ Resources:
       GroupId: !Ref AdminLoadBalancerSecurityGroup
       IpProtocol: TCP
       SourceSecurityGroupId: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", WebCorpSecurityGroup ]
+
+  AdminLoadBalancerIngressRuleNatA:
+    Type: AWS::EC2::SecurityGroupIngress
+    Condition: IsUSEast1
+    Description: Inbound rule for the Admin ALB, allows NAT gateway traffic through subnetA
+    DependsOn: AdminLoadBalancerSecurityGroup
+    Properties: 
+      FromPort: 443
+      ToPort: 443
+      GroupId: !Ref AdminLoadBalancerSecurityGroup
+      IpProtocol: TCP
+      CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", NatGatewayA ]
+  
+  AdminLoadBalancerIngressRuleNatB:
+    Type: AWS::EC2::SecurityGroupIngress
+    Condition: IsUSEast1
+    Description: Inbound rule for the Admin ALB, allows NAT gateway traffic through subnetB
+    DependsOn: AdminLoadBalancerSecurityGroup
+    Properties: 
+      FromPort: 443
+      ToPort: 443
+      GroupId: !Ref AdminLoadBalancerSecurityGroup
+      IpProtocol: TCP
+      CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", NatGatewayB ]
+  
+  AdminLoadBalancerIngressRuleNatC:
+    Type: AWS::EC2::SecurityGroupIngress
+    Condition: IsUSEast1
+    Description: Inbound rule for the Admin ALB, allows NAT gateway traffic through subnetC
+    DependsOn: AdminLoadBalancerSecurityGroup
+    Properties: 
+      FromPort: 443
+      ToPort: 443
+      GroupId: !Ref AdminLoadBalancerSecurityGroup
+      IpProtocol: TCP
+      CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", NatGatewayC ]
 
   AdminLoadBalancerEgressRule:
     Type: AWS::EC2::SecurityGroupEgress
@@ -1831,7 +1876,7 @@ Resources:
     Type: AWS::Route53::RecordSet
     Condition: IsUSEast1
     Properties:
-      HostedZoneId: [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
+      HostedZoneId: !FindInMap [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
       Name: !Sub 
         - sso-${EnvironmentType}.${DefaultExtHostedZone}
         - DefaultExtHostedZone: !FindInMap [ EnvironmentTypeMappings, !Ref EnvironmentType, DefaultExtHostedZone ]
@@ -1839,7 +1884,7 @@ Resources:
       Type: A
       Region: !Ref "AWS::Region"
       AliasTarget:
-        HostedZoneId: [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
+        HostedZoneId: !FindInMap [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
         DNSName: !Ref EngineALBAliasAMERSFailoverPrimary
         EvaluateTargetHealth: true
 
@@ -1847,7 +1892,7 @@ Resources:
     Condition: IsEUWest1
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneId: [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
+      HostedZoneId: !FindInMap [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
       Name: !Sub 
         - sso-${EnvironmentType}.${DefaultExtHostedZone}
         - DefaultExtHostedZone: !FindInMap [ EnvironmentTypeMappings, !Ref EnvironmentType, DefaultExtHostedZone ]
@@ -1855,7 +1900,7 @@ Resources:
       Type: A
       Region: !Ref "AWS::Region"
       AliasTarget:
-        HostedZoneId: [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
+        HostedZoneId: !FindInMap [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
         DNSName: !Ref EngineALBAliasEMEAFailoverPrimary
         EvaluateTargetHealth: true
 
@@ -1863,7 +1908,7 @@ Resources:
     Condition: IsAPSoutheast1
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneId: [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
+      HostedZoneId: !FindInMap [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
       Name: !Sub 
         - sso-${EnvironmentType}.${DefaultExtHostedZone}
         - DefaultExtHostedZone: !FindInMap [ EnvironmentTypeMappings, !Ref EnvironmentType, DefaultExtHostedZone ]
@@ -1871,7 +1916,7 @@ Resources:
       Type: A
       Region: !Ref "AWS::Region"
       AliasTarget:
-        HostedZoneId: [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
+        HostedZoneId: !FindInMap [ EnvironmentTypeMappings, !Ref EnvironmentType, ExtHostedZoneId ]
         DNSName: !Ref EngineALBAliasASPACFailoverPrimary
         EvaluateTargetHealth: true
 
