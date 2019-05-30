@@ -102,6 +102,9 @@ EnvironmentMappings:
 - BastionSSHSecurityGroup: Security Group ID of group that allows SSH access to EC2 instances
 - KeyPrincipal1: ARN of the role that is used to run the CloudFormation template
 - LBCertID: 46177819-1ac4-4355-bf38-580706b9a365
+- NatGatewayA: Nat gateway IP for public subnet A, required for config exporter script.
+- NatGatewayB: Nat gateway IP for public subnet B, required for config exporter script.
+- NatGatewayC: Nat gateway IP for public subnet C, required for config exporter script.
 AWSRegionMappings
 - AWSRegionAbbreviation: A short abbreviation for each AZ, must match the values used in the `create_cli_commands.py` script, e.g. use1
 - AvailabilityZoneA: Name of the availability zone, e.g. us-east-1a
