@@ -41,7 +41,6 @@ class CalculatedValues(object):
         self.aaid               = environment_mapped_values(environment)['aaid']
         self.rds_store          = environment_mapped_values(environment)['rds_store']
         self.aws_acct_id        = environment_mapped_values(environment)['aws_acct_id']
-        self.instance_type      = environment_mapped_values(environment)['instance_type']
         self.region_name_full   = region_mapped_values(region)['region_name_full']
         self.clustered_noderole = noderole_mapped_values(noderole, environment, region)['clustered_noderole']
         self.provisioner        = noderole_mapped_values(noderole, environment, region)['provisioner']
@@ -58,7 +57,6 @@ def environment_mapped_values(environment):
             'aaid'              : '205529',
             'rds_store'         : 'PFDefaultDS',
             'aws_acct_id'       : '888888888888',
-            'instance_type'     : 'c5.xlarge',
             'url_suffix'        : '',
             'pf_header'         : 'Y29uZmlnZXhwb3J0ZXI6MkZlZGVyYXRlIQ==',
             'stack_ids'         : {
@@ -72,7 +70,6 @@ def environment_mapped_values(environment):
             'aaid'              : '205485',
             'rds_store'         : 'PFDefaultDS',
             'aws_acct_id'       : '888888888888',
-            'instance_type'     : 't3.medium',
             'url_suffix'        : '-qa',
             'pf_header'         : 'Y29uZmlnZXhwb3J0ZXI6MkZlZGVyYXRlIQ==',
             'stack_ids'         : {
@@ -86,7 +83,6 @@ def environment_mapped_values(environment):
             'aaid'              : '205466',
             'rds_store'         : 'PFDefaultDS',
             'aws_acct_id'       : '888888888888',
-            'instance_type'     : 't2.medium',
             'url_suffix'        : '-dev',
             'pf_header'         : 'Y29uZmlnZXhwb3J0ZXI6MkZlZGVyYXRlIQ==',
             'stack_ids'         : {
@@ -167,7 +163,6 @@ def get_docker_strings(noderole, environment, region):
     --build-arg AWSREGION={values.region} \\
     --build-arg NODEROLE={values.clustered_noderole} \\
     --build-arg PROVISIONER={values.provisioner} \\
-    --build-arg INSTANCETYPE={values.instance_type} \\
     --build-arg PFVERSION={PFVERSION} \\
     --no-cache ./PingFederate'''
 
