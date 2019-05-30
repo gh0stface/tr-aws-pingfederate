@@ -1,3 +1,15 @@
+'''
+Script notes:
+- This script assumes you have multiple cloud-tool profiles set up and that 
+they are named matching the deployment regions, example: "us-east-1", 
+"eu-west-1", and "ap-southeast-1". If you do not have these profiles or they 
+are named differently, you may eitehr change your cloud-tool profiles to match, 
+or you may manually update the name of the profiles in the outputted commands 
+before running them.
+- Static TR/respository-specific values exist in this script. Most of these are 
+found in the mappings objects and they should very rarely change.
+'''
+
 import sys
 import datetime
 
@@ -18,7 +30,7 @@ if environment not in ['prod', 'qa', 'dev']:
 DATETIMENOW = datetime.datetime.now()
 DATETIMENOW_FORMATTED = DATETIMENOW.strftime('%Y%m%dT%H%M')
 
-PFVERSION = '9.2.0'
+PFVERSION = '9.2.3'
 
 class CalculatedValues(object):
     def __init__(self, environment, region, noderole):
@@ -29,13 +41,14 @@ class CalculatedValues(object):
         self.aaid               = environment_mapped_values(environment)['aaid']
         self.rds_store          = environment_mapped_values(environment)['rds_store']
         self.aws_acct_id        = environment_mapped_values(environment)['aws_acct_id']
+        self.instance_type      = environment_mapped_values(environment)['instance_type']
         self.region_name_full   = region_mapped_values(region)['region_name_full']
         self.clustered_noderole = noderole_mapped_values(noderole, environment, region)['clustered_noderole']
         self.provisioner        = noderole_mapped_values(noderole, environment, region)['provisioner']
         self.environment_label  = noderole_mapped_values(noderole, environment, region)['environment_label']
-        self.aws_region         = noderole_mapped_values(noderole, environment, region)['aws_region']
         self.url_suffix         = noderole_mapped_values(noderole, environment, region)['url_suffix']
         self.pf_header          = noderole_mapped_values(noderole, environment, region)['pf_header']
+        self.stack_id           = environment_mapped_values(environment)['stack_ids']
 
 def environment_mapped_values(environment):
 
@@ -44,26 +57,44 @@ def environment_mapped_values(environment):
             'deployment_regions': ['use1', 'euw1', 'apse1'],
             'aaid'              : '205529',
             'rds_store'         : 'PFDefaultDS',
-            'aws_acct_id'       : '7777777777777',
+            'aws_acct_id'       : '888888888888',
+            'instance_type'     : 'c5.xlarge',
             'url_suffix'        : '',
-            'pf_header'         : 'Y29uZmlnZXhwb3J0ZXI6MkZlZGVyYXRlIQ=='
+            'pf_header'         : 'Y29uZmlnZXhwb3J0ZXI6MkZlZGVyYXRlIQ==',
+            'stack_ids'         : {
+                'use1' : '01626100-ffdd-11e8-8c6a-128a65397f5a',
+                'euw1' : '553521b0-ffe1-11e8-97a3-50a686326636',
+                'apse1': '???',
+            },
         },
         'qa': {
             'deployment_regions': ['use1', 'euw1'],
             'aaid'              : '205485',
             'rds_store'         : 'PFDefaultDS',
             'aws_acct_id'       : '888888888888',
+            'instance_type'     : 't3.medium',
             'url_suffix'        : '-qa',
-            'pf_header'         : 'Y29uZmlnZXhwb3J0ZXI6MkZlZGVyYXRlIQ=='
+            'pf_header'         : 'Y29uZmlnZXhwb3J0ZXI6MkZlZGVyYXRlIQ==',
+            'stack_ids'         : {
+                'use1' : '70f25d70-ffb7-11e8-b3b2-12b2af31d434',
+                'euw1' : 'd9ee8400-ffb9-11e8-9d9d-503ac9e65ad1',
+                'apse1': 'N/A',
+            },
         },
         'dev': {
             'deployment_regions': ['use1'],
             'aaid'              : '205466',
             'rds_store'         : 'PFDefaultDS',
             'aws_acct_id'       : '888888888888',
+            'instance_type'     : 't2.medium',
             'url_suffix'        : '-dev',
-            'pf_header'         : 'Y29uZmlnZXhwb3J0ZXI6MkZlZGVyYXRlIQ=='
-        }
+            'pf_header'         : 'Y29uZmlnZXhwb3J0ZXI6MkZlZGVyYXRlIQ==',
+            'stack_ids'         : {
+                'use1' : '70800720-ff08-11e8-9160-1253a26d999e',
+                'euw1' : 'N/A',
+                'apse1': 'N/A',
+            },
+        },
     }
 
     return mappings[environment]
@@ -90,7 +121,6 @@ def noderole_mapped_values(noderole, environment, region):
         'admin': {
             'clustered_noderole': 'CLUSTERED_CONSOLE',
             'environment_label' : environment,
-            'aws_region'        : '',
             'url_suffix'        : environment_mapped_values(environment)['url_suffix'],
             'provisioner'       : 'OFF', 
             'pf_header'         : environment_mapped_values(environment)['pf_header']
@@ -98,7 +128,6 @@ def noderole_mapped_values(noderole, environment, region):
         'engine': {
             'clustered_noderole': 'CLUSTERED_ENGINE',
             'environment_label' : '',
-            'aws_region'        : region,
             'url_suffix'        : '',
             'provisioner'       : 'OFF', 
             'pf_header'         : ''
@@ -106,7 +135,6 @@ def noderole_mapped_values(noderole, environment, region):
         'provisioner': {
             'clustered_noderole': 'CLUSTERED_ENGINE',
             'environment_label' : '',
-            'aws_region'        : region,
             'url_suffix'        : '',
             'provisioner'       : 'STANDALONE',  
             'pf_header'         : ''
@@ -126,7 +154,7 @@ def get_docker_strings(noderole, environment, region):
 
     values = CalculatedValues(environment, region, noderole)
 
-    docker_image_file = f'{values.aws_acct_id}.dkr.ecr.{values.region_name_full}.amazonaws.com/a{values.aaid}-pf{values.noderole}'
+    docker_image_file = f'{values.aws_acct_id}.dkr.ecr.{values.region_name_full}.amazonaws.com/a{values.aaid}-pf{values.noderole}-{environment}'
 
     docker_build_string = f'''docker build \\
     -t {docker_image_file}:latest \\
@@ -136,13 +164,14 @@ def get_docker_strings(noderole, environment, region):
     --build-arg ENVURLLABEL={values.url_suffix} \\
     --build-arg PFHEADER={values.pf_header} \\
     --build-arg RDSSTORE={values.rds_store} \\
-    --build-arg AWSREGION={values.aws_region} \\
+    --build-arg AWSREGION={values.region} \\
     --build-arg NODEROLE={values.clustered_noderole} \\
     --build-arg PROVISIONER={values.provisioner} \\
+    --build-arg INSTANCETYPE={values.instance_type} \\
     --build-arg PFVERSION={PFVERSION} \\
     --no-cache ./PingFederate'''
 
-    docker_push_string = f'docker push {docker_image_file}:latest'
+    docker_push_string = f'''docker push {docker_image_file}:latest\ndocker push {docker_image_file}:{DATETIMENOW_FORMATTED}'''
 
     docker_strings = {
         'docker_build_string' : docker_build_string,
@@ -155,7 +184,7 @@ def get_create_change_set_string(environment, region):
 
     values = CalculatedValues(environment, region, 'admin')
 
-    cloudformation_script_location_s3 = f'a{values.aaid}-esso-cftemplates/a{values.aaid}-{DATETIMENOW_FORMATTED}-{region}.yaml'
+    cloudformation_script_location_s3 = f'a{values.aaid}-esso-cftemplates-{environment}/a{values.aaid}-{DATETIMENOW_FORMATTED}-{region}.yaml'
 
     s3_cp_string = f'''aws s3 cp \\
     --profile {values.region_name_full} \\
@@ -164,7 +193,7 @@ def get_create_change_set_string(environment, region):
 
     create_change_set_string = f'''aws cloudformation create-change-set \\
     --profile {values.region_name_full} \\
-    --stack-name arn:aws:cloudformation:{values.region_name_full}:{values.aws_acct_id}:stack/a{values.aaid}-esso-fullenv-{environment}/70800720-ff08-11e8-9160-1253a26d999e \\
+    --stack-name arn:aws:cloudformation:{values.region_name_full}:{values.aws_acct_id}:stack/a{values.aaid}-esso-fullenv-{environment}/{values.stack_id[values.region]} \\
     --template-url https://s3.amazonaws.com/{cloudformation_script_location_s3} \\
     --parameters ParameterKey=RDSPassword,UsePreviousValue=true ParameterKey=EnvironmentType,UsePreviousValue=true \\
     --capabilities CAPABILITY_NAMED_IAM \\
