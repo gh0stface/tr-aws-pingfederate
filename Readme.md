@@ -41,7 +41,7 @@ Edit the `org.sourceid.oauth20.token.AccessGrantManagerJdbcImpl.xml`in /tr-aws-p
 Edit `tcp.xml` in /tr-aws-pingfederate/PingFederate/docker-build-files/pingfederate/server/default/conf. Comment out the TCPPING section, and uncomment the AWSPING section. Update the regions and tag sections in AWSPING to look like this:
 - regions="us-east-1,eu-west-1,ap-southeast-1"
 - tags="AAID,ENVNAME"
-- filters="instance-type=INSTANCEYTPE"
+- filters="instance-type=INSTANCETYPE"
 
 ## AWS Environment & CloudFormation Template Preliminary Tasks
 
