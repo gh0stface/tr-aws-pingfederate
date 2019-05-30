@@ -38,8 +38,7 @@ RUN sed -i "s/pf.operational.mode=STANDALONE/pf.operational.mode=${NODEROLE}/g" 
  && sed -i "s/RDSSTORE/${RDSSTORE}/g" ./server/default/data/config-store/org.sourceid.oauth20.token.AccessGrantManagerJdbcImpl.xml \
  && sed -i "s/RDSSTORE/${RDSSTORE}/g" ./server/default/data/config-store/org.sourceid.oauth20.domain.ClientManagerJdbcImpl.xml \
  && sed -i "s/node.group.id=/node.group.id=${AWSREGION}/g" ./server/default/conf/cluster-adaptive.conf \
- && sed -i "s/ENVNAME/${ENVNAME}/g" ./server/default/conf/tcp.xml \
- && sed -i "s/INSTANCETYPE/${INSTANCETYPE}/g" ./server/default/conf/tcp.xml
+ && sed -i "s/ENVNAME/${ENVNAME}/g" ./server/default/conf/tcp.xml
 
 RUN if [ ${NODEROLE} = "CLUSTERED_CONSOLE" ]; then \
     sed -i "s,PF_REPLICATE,https://ssoadmin${ENVURLLABEL}.thomsonreuters.com/pf-admin-api/v1/cluster/replicate,g" ./bin/replicate.sh; \
