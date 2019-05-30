@@ -56,7 +56,7 @@ RUN if [ ${NODEROLE} = "CLUSTERED_ENGINE" ]; then \
     sed -i "s/pf.provisioner.mode=OFF/pf.provisioner.mode=${PROVISIONER}/g" ./bin/run.properties; \
  fi
 
-EXPOSE 9999 9031 7600 7601 7700 7500
+EXPOSE 9999 9031 7600 7700
 
 USER a${AAID}-PowerUser2:a${AAID}-PowerUser2
 
