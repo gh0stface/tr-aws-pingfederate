@@ -13,7 +13,7 @@ This repository makes reference to something called the Asset Insight ID (AAID).
 You will need the following files in the following paths (files can be updated with newer versions). **You may need to build the missing folder structure under /docker-build-files/ for any files you wish to modify for your deployment.** You will mimic the folder structure of a PingFederate deployment. Extract pingfederate.zip for an example:
 
 /tr-aws-pingfederate/PingFederate/docker-build-files
-- `pingfederate-9.2.0.zip`
+- `pingfederate-9.2.3.zip`
 - `openjdk-11.0.1_linux-x64_bin.tar.gz`
 
 /tr-aws-pingfederate/PingFederate/docker-build-files/pingfederate/server/default/conf
