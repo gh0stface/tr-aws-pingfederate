@@ -431,35 +431,13 @@ Resources:
     Description: Allows traffic from nodes in the AMERS region
     DependsOn: ECSHostSecurityGroup
     Properties: 
-      FromPort: 7601
-      ToPort: 7601
-      GroupId: !Ref ECSHostSecurityGroup
-      IpProtocol: TCP
-      CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", AmersVPCCidrRange ]
-
-  ECSHostIngressRule3:
-    Type: AWS::EC2::SecurityGroupIngress
-    Description: Allows traffic from nodes in the AMERS region
-    DependsOn: ECSHostSecurityGroup
-    Properties: 
-      FromPort: 7500
-      ToPort: 7500
-      GroupId: !Ref ECSHostSecurityGroup
-      IpProtocol: TCP
-      CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", AmersVPCCidrRange ]
-
-  ECSHostIngressRule4:
-    Type: AWS::EC2::SecurityGroupIngress
-    Description: Allows traffic from nodes in the AMERS region
-    DependsOn: ECSHostSecurityGroup
-    Properties: 
       FromPort: 7700
       ToPort: 7700
       GroupId: !Ref ECSHostSecurityGroup
       IpProtocol: TCP
       CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", AmersVPCCidrRange ]
 
-  ECSHostIngressRule5:
+  ECSHostIngressRule3:
     Type: AWS::EC2::SecurityGroupIngress
     Description: Allows inbound traffic from the Engine ALB
     DependsOn: 
@@ -472,7 +450,7 @@ Resources:
       IpProtocol: TCP
       SourceSecurityGroupId: !Ref EngineLoadBalancerSecurityGroup
 
-  ECSHostIngressRule6:
+  ECSHostIngressRule4:
     Type: AWS::EC2::SecurityGroupIngress
     Condition: IsUSEast1
     Description: Allows inbound traffic from the Admin ALB
@@ -486,7 +464,7 @@ Resources:
       IpProtocol: TCP
       SourceSecurityGroupId: !Ref AdminLoadBalancerSecurityGroup
 
-  ECSHostIngressRule7:
+  ECSHostIngressRule5:
     Type: AWS::EC2::SecurityGroupIngress
     Description: Allows ssh access via the Bastion security group and cloud-tool
     DependsOn: ECSHostSecurityGroup
@@ -497,7 +475,7 @@ Resources:
       IpProtocol: TCP
       SourceSecurityGroupId: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", BastionSSHSecurityGroup ]
 
-  ECSHostIngressRule8:
+  ECSHostIngressRule6:
     Type: AWS::EC2::SecurityGroupIngress
     Description: Allows traffic from nodes in the EMEA region
     DependsOn: ECSHostSecurityGroup
@@ -508,29 +486,7 @@ Resources:
       IpProtocol: TCP
       CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", EmeaVPCCidrRange ]
 
-  ECSHostIngressRule9:
-    Type: AWS::EC2::SecurityGroupIngress
-    Description: Allows traffic from nodes in the EMEA region
-    DependsOn: ECSHostSecurityGroup
-    Properties: 
-      FromPort: 7601
-      ToPort: 7601
-      GroupId: !Ref ECSHostSecurityGroup
-      IpProtocol: TCP
-      CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", EmeaVPCCidrRange ]
-
-  ECSHostIngressRule10:
-    Type: AWS::EC2::SecurityGroupIngress
-    Description: Allows traffic from nodes in the EMEA region
-    DependsOn: ECSHostSecurityGroup
-    Properties: 
-      FromPort: 7500
-      ToPort: 7500
-      GroupId: !Ref ECSHostSecurityGroup
-      IpProtocol: TCP
-      CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", EmeaVPCCidrRange ]
-
-  ECSHostIngressRule11:
+  ECSHostIngressRule7:
     Type: AWS::EC2::SecurityGroupIngress
     Description: Allows traffic from nodes in the EMEA region
     DependsOn: ECSHostSecurityGroup
@@ -541,7 +497,7 @@ Resources:
       IpProtocol: TCP
       CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", EmeaVPCCidrRange ]
 
-  ECSHostIngressRule12:
+  ECSHostIngressRule8:
     Type: AWS::EC2::SecurityGroupIngress
     Condition: IsProd
     Description: Allows traffic from nodes in the ASPAC region
@@ -553,31 +509,7 @@ Resources:
       IpProtocol: TCP
       CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", AspacVPCCidrRange ]
 
-  ECSHostIngressRule13:
-    Type: AWS::EC2::SecurityGroupIngress
-    Condition: IsProd
-    Description: Allows traffic from nodes in the ASPAC region
-    DependsOn: ECSHostSecurityGroup
-    Properties:
-      FromPort: 7601
-      ToPort: 7601
-      GroupId: !Ref ECSHostSecurityGroup
-      IpProtocol: TCP
-      CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", AspacVPCCidrRange ]
-
-  ECSHostIngressRule14:
-    Type: AWS::EC2::SecurityGroupIngress
-    Condition: IsProd
-    Description: Allows traffic from nodes in the ASPAC region
-    DependsOn: ECSHostSecurityGroup
-    Properties:
-      FromPort: 7500
-      ToPort: 7500
-      GroupId: !Ref ECSHostSecurityGroup
-      IpProtocol: TCP
-      CidrIp: !FindInMap [ !Ref EnvironmentType, !Ref "AWS::Region", AspacVPCCidrRange ]
-
-  ECSHostIngressRule15:
+  ECSHostIngressRule9:
     Type: AWS::EC2::SecurityGroupIngress
     Condition: IsProd
     Description: Allows traffic from nodes in the ASPAC region
