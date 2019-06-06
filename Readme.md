@@ -176,6 +176,7 @@ With these values populated, re-run the template in us-east-1 to create the Clou
 Configure a client to connect to the RDS instance, and retrieve the RDS secret from Secrets Manager. Pull the following scripts from the pingfederate-9.x.x.zip file and run them in the database:
 - `oauth-client-management-postgresql.sql`
 - `access-grant-attribute-postgresql.sql`
+- `access-grant-postgresql.sql`
 - `provisioner-postgresql.sql`
 
 ## PingFederate Post-Build Tasks
