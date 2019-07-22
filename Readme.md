@@ -4,7 +4,7 @@ By:
 - Sean Farrell
 - Alyssa Kelber
 
-This repository contains the CloudFormation template, DockerFile, and python script, that will populate a unified, global, multi-region, containerized, PingFederate instance running on ECS.
+This repository contains the CloudFormation template, DockerFile, and python script, that will populate a unified, global, multi-region, containerized, PingFederate instance running on ECS. See prod_architecture_diagram.pdf for a view of all items created using the "prod" switch. QA creates the same, minus the ap-southeast-1 region, the secondary RDS backup, and only 1 engine in us-east-1 and eu-west-1. Dev creates the same as QA, minus anything in eu-west-1.
 
 The dockerfile references some files from PingFederate which are not included in this repo, as well as some additional third-party binaries. Any additional modifications you wish to do to your instances should also be accounted for in your own repos, with the files placed in their same paths as found in a running PingFederate server.
 
