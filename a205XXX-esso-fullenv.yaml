@@ -1343,6 +1343,7 @@ Resources:
     Properties:
       Enabled: true
       EnableKeyRotation: false
+      PendingWindowInDays: 30
       KeyPolicy: 
         Version: "2012-10-17"
         Id: !Sub 
