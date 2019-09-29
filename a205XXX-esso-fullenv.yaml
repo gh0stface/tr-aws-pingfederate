@@ -716,6 +716,17 @@ Resources:
       HealthyThresholdCount: 2
       TargetType: instance
       UnhealthyThresholdCount: 4
+      TargetGroupAttributes:
+        - Key: "stickiness.enabled"
+          Value: "true"
+        - Key: "deregistration_delay.timeout_seconds"
+          Value: "30"
+        - Key: "stickiness.type"
+          Value: "lb_cookie"
+        - Key: "stickiness.lb_cookie.duration_seconds"
+          Value: "86400"
+        - Key: "slow_start.duration_seconds"
+          Value: "0"
       Tags: 
         - Key: Name
           Value: !Sub 
