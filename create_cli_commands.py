@@ -30,7 +30,7 @@ if environment not in ['prod', 'qa', 'dev']:
 DATETIMENOW = datetime.datetime.now()
 DATETIMENOW_FORMATTED = DATETIMENOW.strftime('%Y%m%dT%H%M')
 
-PFVERSION = '9.2.3'
+PFVERSION = '9.3.1'
 
 class CalculatedValues(object):
     def __init__(self, environment, region, noderole):
