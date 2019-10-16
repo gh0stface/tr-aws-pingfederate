@@ -15,7 +15,7 @@ COPY docker-build-files /tmp/docker-build-files
 WORKDIR /opt/pingfederate-${PFVERSION}/pingfederate
 
 RUN apt-get update \
- && apt-get install unzip curl awscli vim -y \
+ && apt-get install unzip curl awscli vim sudo -y \
  && unzip /tmp/docker-build-files/pingfederate-*.zip -d /opt \
  && ls /tmp/docker-build-files/openj*.tar.gz | xargs -i tar -xf {} -C /opt \
  && cp -r /tmp/docker-build-files/pingfederate/* . \
@@ -50,6 +50,9 @@ RUN if [ ${NODEROLE} = "CLUSTERED_CONSOLE" ]; then \
  else \
     rm ./bin/replicate.sh && rm ./bin/export.sh; \
  fi
+
+RUN echo "a${AAID}-PowerUser2 ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/a${AAID}-PowerUser2
+# this permission is completely removed via the startup.sh once it is used to start the cron service as the PowerUser2 user
 
 RUN if [ ${NODEROLE} = "CLUSTERED_ENGINE" ]; then \
     sed -i "s/pf.provisioner.mode=OFF/pf.provisioner.mode=${PROVISIONER}/g" ./bin/run.properties; \
