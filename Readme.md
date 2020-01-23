@@ -17,7 +17,8 @@ You will need the following files in the following paths (files can be updated w
 - `openjdk-11.0.2_linux-x64_bin.tar.gz`
 
 /tr-aws-pingfederate/PingFederate/docker-build-files/pingfederate/server/default/conf
-- `pingfederate.lic`
+- `prodpingfederate.lic` (Your prod PingFederate license file)
+- `nonprodpingfederate.lic` (Your nonprod PingFederate license file)
 - `tcp.xml` (pull from PingFederate)
 
 /tr-aws-pingfederate/PingFederate/docker-build-files/pingfederate/server/default/conf/META-INF
