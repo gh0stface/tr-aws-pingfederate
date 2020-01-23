@@ -23,6 +23,15 @@ RUN apt-get update \
  && useradd -r -g a${AAID}-PowerUser2 a${AAID}-PowerUser2 \
  && chown -R a${AAID}-PowerUser2:a${AAID}-PowerUser2 . \
  && rm -r /tmp/docker-build-files
+ 
+#Manage the license files per environment
+RUN if [ ${ENVNAME} = "prod" ]; then \
+    cp ./server/default/conf/prodpingfederate.lic ./server/default/conf/pingfederate.lic; \
+    chown a${AAID}-PowerUser2:a${AAID}-PowerUser2 ./server/default/conf/pingfederate.lic; \
+ else \
+    cp ./server/default/conf/nonprodpingfederate.lic ./server/default/conf/pingfederate.lic; \
+    chown a${AAID}-PowerUser2:a${AAID}-PowerUser2 ./server/default/conf/pingfederate.lic; \
+ fi
 
 ENV JAVA_HOME /opt/jdk-11.0.1
 ENV PF_HOME /opt/pingfederate-${PFVERSION}/pingfederate
